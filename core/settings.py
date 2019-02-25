@@ -27,7 +27,7 @@ SECRET_KEY = 'for&!8-p2=s-@wuyx0thqb@(+-0!6a=)gvyckgw51a-*hxn+4f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'ancient-bayou-44560.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', 'ancient-springs-30332.herokuapp.com']
 
 
 # Application definition
