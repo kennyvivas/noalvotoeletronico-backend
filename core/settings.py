@@ -30,7 +30,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'for&!8-p2=s-@wuyx0thqb@(+-0!6a=)gvyckgw51a-*hxn+4f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', 'ancient-springs-30332.herokuapp.com']
 
