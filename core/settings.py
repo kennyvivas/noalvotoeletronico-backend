@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import datetime
 import django_heroku 
+import dj_database_url # add this to the top of your file
+
+
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,6 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# heroku config:set DJANGO_SECRET_KEY='for&!8-p2=s-@wuyx0thqb@(+-0!6a=)gvyckgw51a-*hxn+4f'
 SECRET_KEY = 'for&!8-p2=s-@wuyx0thqb@(+-0!6a=)gvyckgw51a-*hxn+4f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -88,12 +93,16 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
 AUTH_USER_MODEL='accounts.user'
 
 # Password validation
