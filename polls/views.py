@@ -58,11 +58,11 @@ class VoteViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)       
 
-    @action(methods=['post'], detail=True, permission_classes=[])
-    def add_vote(self, request,pk=None):
-        p = Process.objects.get(id=pk)
-        p.addVote(json.dumps(request.data['vote']))
+    @action(methods=['post'], detail=False, permission_classes=[])
+    def add_vote(self, request):
+        p = Process.objects.get(is_active=True)
+        resp = p.addVote(request.user,request.data)
 
-        return Response({'data':'Vote accepted'})          
+        return Response({'data':resp})          
 
        

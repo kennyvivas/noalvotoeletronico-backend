@@ -29,25 +29,28 @@ class Process(models.Model):
     winner_list = models.CharField(max_length=255,null=True, blank=True)
     voters_list = models.CharField(max_length=255,null=True, blank=True)
 
-    def addVote(self, new_votes_list=None): 
-    #  tuples as [{"Choice": N, "value": M},{"Choice": N, "value": M},{"Choice": N, "value": M}] 
-        # new_votes_list=json.loads(new_votes_list)
-        # print('desde addvotes ', new_votes_list,type(new_votes_list))
-        new_votes_list = json.loads(json.dumps(new_votes_list))
-
-        if type(self.vote_list) is str:
-            vote_list = json.loads(self.vote_list)
-
-        if type(self.vote_list) is list:
-            vote_list = self.vote_list
-
-        for currentVote in vote_list:
-            for newVote in  new_votes_list:
-                if newVote["id"] == currentVote["id"]:
-                    currentVote["value"] += newVote["value"]
+    def addVote(self,user, new_votes_list):  
+        p = Process.objects.get(is_active=True)
+        check_if_voted = len(Vote.objects.filter(user=user,process=p))
         
-        self.vote_list = json.dumps(vote_list)
-        self.save()
+        if check_if_voted<1:
+            if type(self.vote_list) is str:
+                vote_list = json.loads(self.vote_list)
+                for currentVote in vote_list:
+                    for newVote in  new_votes_list:
+                        if newVote["id"] == currentVote["id"]:
+                            currentVote["value"] += newVote["value"]
+                self.vote_list = json.dumps(vote_list)
+            else:
+                self.vote_list = json.dumps(new_votes_list)
+            vote = Vote()
+            vote.user=user
+            vote.process = p
+            vote.save();             
+            self.save()
+            return('Tu voto ha sido aceptado')    
+        else:
+            return('Ya has votado en este proceso')            
 
     def topVotes(self):
         vote_list = json.loads(self.vote_list)
@@ -55,17 +58,13 @@ class Process(models.Model):
 
     #  Importante
     def startProcess(self):
-        # inicializar el listado de choices
-        # pasar de inactive a active
         self.is_active = True
         projects = Project.objects.all().values('id')
         for project in projects:
             project['value']=0
-        # print(list(projects))
         self.vote_list = json.dumps(list(projects))
         self.winner_list=[]
         self.save()
-
 
     def finishProcess(self):
         final_list = Process.topVotes(self)
@@ -88,7 +87,6 @@ class Process(models.Model):
         self.save()
             
 class Vote(models.Model):
-    
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     process = models.ForeignKey(Process,on_delete=models.CASCADE)
     votes=models.CharField(max_length=255,null=True, blank=True)
