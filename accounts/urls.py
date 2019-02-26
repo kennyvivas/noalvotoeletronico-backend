@@ -11,4 +11,6 @@ urlpatterns = [
     re_path(r'^user/login/$', jwt_views.ObtainJSONWebToken.as_view(), name='user-login'),
     re_path(r'^user/login/refresh/$', jwt_views.RefreshJSONWebToken.as_view(), name='user-login-refresh'),
     re_path(r'^user/logout/all/$', views.UserLogoutAllView.as_view(), name='user-logout-all'),
+    re_path(r'^user/role/$', views.UserGetRole.as_view(), name='user-role'),
+    
 ]
