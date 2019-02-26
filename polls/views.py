@@ -38,14 +38,19 @@ class ProcessViewSet(viewsets.ModelViewSet):
         p = Process.objects.get(id=pk)
         p.startProcess()
 
-        return Response({'data':'Voting process is open'})  
+        return Response({'data':'Proceso de votacion abierto!'})  
 
     @action(methods=['get'], detail=False, permission_classes=[])
     def get_active(self, request):
         p = Process.objects.get(is_active=True)
-        # serializer = self.serializer_class(queryset, many=True)
         serializer = ProcessSerializer(p,context={'request':request})
         return Response(serializer.data)
+
+    @action(methods=['get'], detail=False, permission_classes=[])
+    def finishProcess(self,request):
+        p = Process.objects.get(is_active=True)
+        p.finishProcess()
+        return Response({'data':'Proceso de votacion cerrado!'})  
         
 
 class VoteViewSet(viewsets.ModelViewSet):
